@@ -253,3 +253,248 @@ def input_parcel() -> Parcel:
 
 
 
+
+
+
+# DELIVERY FUNCTIONS — Hassane
+
+def create_delivery(clients: list, couriers: list, deliveries: list):
+    """
+    Manages the full process of creating a new delivery :
+    - Checks that clients and couriers exist
+    - Finds an available courier automatically
+    - Collects parcel information
+    - Creates the Delivery object
+    - Calculates the total fee
+    - Updates courier availability
+    - Updates client order history
+    - Saves the delivery to file
+
+    Args:
+        clients (list): The list of registered clients.
+        couriers (list): The list of registered couriers.
+        deliveries (list): The existing list of deliveries to update.
+    """
+    display_title("Create a New Delivery")
+
+    # Check that at least one client exists
+    if not clients:
+        print(" No clients registered. Please add a client first (option 1).")
+        return
+
+    # Check that at least one courier exists
+    if not couriers:
+        print(" No couriers registered. Please add a courier first (option 2).")
+        return
+
+    # Find the first available courier automatically
+    courier = find_available_courier(couriers)
+    if not courier:
+        print(" No couriers are available right now. Please try again later.")
+        return
+
+    # Display all clients for the user to choose from
+    print("\n  --- Registered Clients ---")
+    for index, client in enumerate(clients, start=1):
+        print(f"  {index}. {client.get_first_name()} {client.get_last_name()} (ID: {client.get_client_id()})")
+
+    # Ask user to select a client by number
+    print()
+    choice_str: str = input("  Select a client by number : ").strip()
+    while not choice_str.isdigit() or not (1 <= int(choice_str) <= len(clients)):
+        print(f" Please enter a number between 1 and {len(clients)}.")
+        choice_str = input("  Select a client by number : ").strip()
+
+    # Retrieve selected client (list index is choice - 1)
+    selected_client = clients[int(choice_str) - 1]
+
+    # Collect parcel details
+    parcel = input_parcel()
+
+    # Collect pickup and drop-off addresses
+    print()
+    pickup: str = input("  Pickup address   : ").strip()
+    while not pickup:
+        print(" Pickup address cannot be empty.")
+        pickup = input("  Pickup address   : ").strip()
+
+    drop_off: str = input("  Drop-off address : ").strip()
+    while not drop_off:
+        print(" Drop-off address cannot be empty.")
+        drop_off = input("  Drop-off address : ").strip()
+
+    # Create the Delivery object
+    new_delivery = Delivery(selected_client, courier, parcel, pickup, drop_off)
+
+    # Calculate and store the total shipping fee
+    total_fee = new_delivery.calculate_total_fee()
+
+    # Mark the assigned courier as unavailable
+    courier.set_availability(False)
+
+    # Add delivery ID to the client's order history
+    selected_client.add_order(new_delivery.get_delivery_id())
+
+    # Add the delivery to the in-memory list
+    deliveries.append(new_delivery)
+
+    # Save the delivery to file
+    save_delivery(new_delivery)
+
+    # Confirmation message
+    print(f"\n Delivery created successfully!")
+    print(f"  Delivery ID  : {new_delivery.get_delivery_id()}")
+    print(f"  Courier      : {courier.get_first_name()} {courier.get_last_name()}")
+    print(f"  Total Fee    : {total_fee:,.0f} FCFA")
+
+
+def track_delivery(deliveries: list):
+    """
+    Allows the user to search for a delivery by its unique ID
+    and displays its current status and full details.
+
+    Args:
+        deliveries (list): The list of all Delivery objects.
+    """
+    display_title("Track a Delivery")
+
+    if not deliveries:
+        print("  No deliveries recorded yet.")
+        return
+
+    # Ask for the delivery ID
+    delivery_id: str = input("  Enter Delivery ID : ").strip()
+
+    # Search for the delivery using the utility function
+    delivery = find_delivery_by_id(deliveries, delivery_id)
+
+    if delivery:
+        delivery.display_details()
+    else:
+        print(f" No delivery found with ID: {delivery_id.upper()}")
+
+
+def update_delivery_status(deliveries: list):
+    """
+    Allows the user to update the status of an existing delivery.
+    Displays the valid status options and validates the user's input.
+
+    Args:
+        deliveries (list): The list of all Delivery objects.
+    """
+    display_title("Update Delivery Status")
+
+    if not deliveries:
+        print("  No deliveries recorded yet.")
+        return
+
+    # Ask for the delivery ID to update
+    delivery_id: str = input("  Enter Delivery ID : ").strip()
+    delivery = find_delivery_by_id(deliveries, delivery_id)
+
+    if not delivery:
+        print(f" No delivery found with ID: {delivery_id.upper()}")
+        return
+
+    # Show current status and valid options
+    print(f"\n  Current status : {delivery.get_status().upper()}")
+    print(f"  Valid statuses : {', '.join(VALID_STATUSES)}")
+
+    # Collect and validate the new status
+    new_status: str = input("\n  New status : ").strip().lower()
+    while new_status not in VALID_STATUSES:
+        print(f" Invalid status. Choose from : {', '.join(VALID_STATUSES)}")
+        new_status = input("  New status : ").strip().lower()
+
+    # Apply the status update
+    delivery.update_status(new_status)
+
+    # If the delivery is marked as delivered, use the dedicated method
+    if new_status == "delivered":
+        delivery.mark_as_delivered()
+        # Free up the courier when delivery is completed
+        delivery.get_courier().set_availability(True)
+
+
+def display_all_deliveries(deliveries: list):
+    """
+    displays a summary of all deliveries with their IDs,
+    client names, courier names and current statuses.
+    Shows a message if no deliveries exist yet
+
+    Args:
+        deliveries (list): The list of all Delivery objects.
+    """
+    display_title("All deliveries")
+
+    if not deliveries:
+        print("  No deliveries recorded yet.")
+        return
+
+    # Table header
+    print(f"  {'ID':<12} {'Client':<22} {'Courier':<22} {'Status':<12} {'Fee (FCFA)'}")
+    display_separator()
+
+    # for loop to display a summary row for each delivery
+    for delivery in deliveries:
+        client = delivery.get_client()
+        courier = delivery.get_courier()
+        client_name = f"{client.get_first_name()} {client.get_last_name()}"
+        courier_name = f"{courier.get_first_name()} {courier.get_last_name()}"
+        print(f"  {delivery.get_delivery_id():<12} {client_name:<22} {courier_name:<22} "
+              f"{delivery.get_status():<12} {delivery.get_total_fee():,.0f}")
+
+    display_separator()
+    print(f"  Total : {len(deliveries)} delivery(ies)")
+
+
+def generate_report(deliveries: list):
+    """
+    Counts deliveries by status using a dictionary,
+    displays the statistics in the terminal,
+    and saves the report to a file.
+
+    Args:
+        deliveries (list): the list of all Delivery objects.
+    """
+    display_title("delivery Report")
+
+    if not deliveries:
+        print("  No deliveries to report on yet.")
+        return
+
+    # Use a dictionary to count deliveries by status ---
+    status_counts: dict = {
+        "pending": 0,
+        "in_transit": 0,
+        "delivered": 0,
+        "cancelled": 0
+    }
+
+    total_revenue: float = 0.0
+
+    # for loop to tally each delivery's status and add up revenue
+    for delivery in deliveries:
+        status = delivery.get_status()
+        if status in status_counts:
+            status_counts[status] += 1
+        total_revenue += delivery.get_total_fee()
+
+    # Display the statistics in the terminal
+    print(f"\n  Total deliveries   : {len(deliveries)}")
+    display_separator()
+    print(f"  Pending            : {status_counts['pending']}")
+    print(f"  In Transit         : {status_counts['in_transit']}")
+    print(f"  Delivered          : {status_counts['delivered']}")
+    print(f"  Cancelled          : {status_counts['cancelled']}")
+    display_separator()
+    print(f"  Total Revenue      : {total_revenue:,.0f} FCFA")
+
+    # Save the report to file using the file_handler function
+    save_report(deliveries)
+    print(f"\n Report saved to file successfully.")
+  
+
+
+
+
