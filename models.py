@@ -106,14 +106,98 @@ class Person:
 
 
 
+        
+
+# CHILD CLASS : Client
+# Coded by : Cheick
+# Inherits from : Person
+
+class Client(Person):
+    """
+    Represents a client who sends or receives parcels.
+    Inherits from Person — demonstrates Inheritance and Polymorphism.
+    """
+
+    def __init__(self, last_name: str, first_name: str, phone: str,
+                 email: str, address: str):
+        """
+        Initialises a client with personal information and physical address.
+
+        Args:
+            last_name (str): The client's last name.
+            first_name (str): The client's first name.
+            phone (str): The client's phone number.
+            email (str): The client's email address.
+            address (str): The client's physical address.
+        """
+        # Call the parent constructor — inheritance
+        super().__init__(last_name, first_name, phone, email)
+
+        # Client-specific private attributes
+        self._address: str = address
+        self._client_id: str = str(uuid.uuid4())[:8].upper()   # auto-generated unique ID
+        self._order_history: list = []                          # list of delivery IDs
+
+    # Getters 
+
+    def get_client_id(self) -> str:
+        """Returns the unique identifier of the client."""
+        return self._client_id
+
+    def get_address(self) -> str:
+        """Returns the physical address of the client."""
+        return self._address
+
+    def get_order_history(self) -> list:
+        """Returns the list of delivery IDs from past orders."""
+        return self._order_history
+
+    # Methods 
+
+    def add_order(self, delivery_id: str):
+        """
+        Adds a delivery ID to the client's order history.
+
+        Args:
+            delivery_id (str): The unique ID of the delivery to record.
+        """
+        self._order_history.append(delivery_id)
+
+    def display_info(self):
+        """
+        Displays the full information of the client.
+        Overrides Person.display_info() — demonstrates Polymorphism.
+        """
+        print(f"  Client ID   : {self._client_id}")
+        print(f"  Name        : {self._first_name} {self._last_name}")
+        print(f"  Phone       : {self._phone}")
+        print(f"  Email       : {self._email}")
+        print(f"  Address     : {self._address}")
+        print(f"  Orders      : {len(self._order_history)}")
+
+    def display_order_history(self):
+        """Displays all past delivery IDs associated with this client."""
+        if not self._order_history:
+            print("  No orders found for this client.")
+        else:
+            print(f"  Order history for {self._first_name} {self._last_name}:")
+            # for loop to go through each past order
+            for index, delivery_id in enumerate(self._order_history, start=1):
+                print(f"    {index}. Delivery ID : {delivery_id}")
+
+    def __str__(self) -> str:
+        """Returns a short string representation of the client."""
+        return f"[CLIENT] {self._first_name} {self._last_name} (ID: {self._client_id})"
+
+
+
+
+
+
 
 # CHILD CLASS : Courier
 # Coded by : Ezekiel
 # Inherits from : Person
-
-
-
-
 
 class Courier(Person):
     """
@@ -216,200 +300,12 @@ class Courier(Person):
         availability = "Available" if self._available else "Busy"
         return f"[COURIER] {self._first_name} {self._last_name} — {self._zone} — {availability}"
 
-# =============================================================================
-# CHEICK - Client Class (extends Person)
-# Files: models.py (class) + menu.py (display functions)
-# =============================================================================
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# PART 1 : Paste this into models.py (after Nimatou's Person class)
-# ─────────────────────────────────────────────────────────────────────────────
-
-class Client(Person):
-    """Represents a customer of the QuickDeliver_BF delivery service.
-
-    Inherits from the Person class. Adds a delivery address, a unique
-    client ID, and an order history.
-    """
-
-    def __init__(self, first_name: str, last_name: str, phone: str,
-                 email: str, address: str, client_id: str):
-        """Initializes a Client object.
-
-        Args:
-            first_name (str): Client's first name.
-            last_name (str): Client's last name.
-            phone (str): Phone number.
-            email (str): Email address.
-            address (str): Client's delivery address.
-            client_id (str): Unique client identifier (e.g. CLT001).
-        """
-        # Call the parent class constructor (Person)
-        super().__init__(first_name, last_name, phone, email)
-
-        # Private attributes specific to Client
-        self._address: str = address
-        self._client_id: str = client_id
-        self._order_history: list = []  # List of past orders
-
-    # ── Getters ──────────────────────────────────────────────────────────────
-
-    def get_address(self) -> str:
-        """Returns the client's delivery address."""
-        return self._address
-
-    def get_client_id(self) -> str:
-        """Returns the client's unique identifier."""
-        return self._client_id
-
-    def get_order_history(self) -> list:
-        """Returns the list of the client's orders."""
-        return self._order_history
-
-    # ── Setters ──────────────────────────────────────────────────────────────
-
-    def set_address(self, new_address: str):
-        """Updates the client's delivery address.
-
-        Args:
-            new_address (str): New delivery address.
-        """
-        self._address = new_address
-
-    # ── Methods ──────────────────────────────────────────────────────────────
-
-    def add_order(self, order_id: str):
-        """Adds an order to the client's order history.
-
-        Args:
-            order_id (str): The order identifier to add.
-        """
-        self._order_history.append(order_id)
-        print(f"✅ Order {order_id} added for {self.get_first_name()}.")
-
-    def display_order_history(self):
-        """Displays all orders placed by the client."""
-        print(f"\n📦 Order history for {self.get_first_name()} {self.get_last_name()}:")
-        if not self._order_history:
-            print("   No orders recorded yet.")
-        else:
-            for i, order in enumerate(self._order_history, start=1):
-                print(f"   {i}. {order}")
-
-    def display_info(self):
-        """Displays the full information of the client.
-
-        Overrides the display_info() method from the Person class
-        by adding the address and client ID.
-        """
-        # Call the parent's display_info() first (Person)
-        super().display_info()
-        # Then add Client-specific information
-        print(f"   Client ID    : {self._client_id}")
-        print(f"   Address      : {self._address}")
-        print(f"   Total orders : {len(self._order_history)}")
-
-    def __str__(self) -> str:
-        """Returns a text representation of the client."""
-        return (f"Client [{self._client_id}] - "
-                f"{self.get_first_name()} {self.get_last_name()} - "
-                f"{self._address}")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# PART 2 : Paste this into menu.py (functions for the main menu)
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Global list that stores all created clients
-clients: list = []
-
-
-def input_client():
-    """Asks the user to enter information for a new client
-    and adds them to the clients list.
-    """
-    print("\n" + "=" * 40)
-    print("        ADD A NEW CLIENT")
-    print("=" * 40)
-
-    # User input
-    first_name: str = input("First name   : ").strip()
-    last_name: str  = input("Last name    : ").strip()
-    phone: str      = input("Phone        : ").strip()
-    email: str      = input("Email        : ").strip()
-    address: str    = input("Address      : ").strip()
-
-    # Automatically generate the client ID
-    client_id: str = f"CLT{len(clients) + 1:03d}"  # e.g. CLT001, CLT002...
-
-    # Create the Client object
-    new_client = Client(first_name, last_name, phone, email, address, client_id)
-
-    # Add to the global list
-    clients.append(new_client)
-
-    print(f"\n✅ Client {client_id} successfully created!")
-    return new_client
-
-
-def display_all_clients():
-    """Displays the list of all registered clients."""
-    print("\n" + "=" * 40)
-    print("        ALL REGISTERED CLIENTS")
-    print("=" * 40)
-
-    if not clients:
-        print("No clients registered yet.")
-    else:
-        for client in clients:
-            client.display_info()
-            print("-" * 40)
-
-    print(f"\nTotal: {len(clients)} client(s)")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# PART 3 : Quick test (remove before final submission)
-# Useful to verify your code works correctly
-# ─────────────────────────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-
-    # Create 2 Client objects for testing
-    client1 = Client("Aminata", "Ouedraogo", "70001122", "aminata@gmail.com",
-                     "Sector 10, Ouagadougou", "CLT001")
-
-    client2 = Client("Ibrahim", "Kabore", "76543210", "ibrahim@yahoo.fr",
-                     "Sector 4, Bobo-Dioulasso", "CLT002")
-
-    # Test display_info() — polymorphism visible here
-    client1.display_info()
-    print()
-    client2.display_info()
-
-    # Test add_order() and display_order_history()
-    client1.add_order("ORD001")
-    client1.add_order("ORD002")
-    client1.display_order_history()
-
-    # Test __str__()
-    print()
-    print(str(client1))
-    print(str(client2))
-
-
 
 
 
 
 # PARCEL CLASS
 # Coded by Nina
-
-
-
-
-
 class Parcel:
     """
     Represents a parcel to be delivered with its physical characteristics.
