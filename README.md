@@ -35,7 +35,7 @@ git clone https://github.com/hassane-labs/QuickDeliver_bf.git
 
 2. **Move into the project folder**
 ```bash
-cd QuickDeliver_BF
+cd QuickDeliver_bf
 ```
 
 3. **Run the program**
@@ -43,7 +43,7 @@ cd QuickDeliver_BF
 python main.py
 ```
 
-> ⚠️ On some systems, use `python3` instead of `python`.
+> ⚠️ Use `python3` instead of `python`.
 
 ---
 
@@ -136,7 +136,7 @@ Represents a complete delivery — links a Client, a Courier and a Parcel togeth
 
 ---
 
-### The 4 OOP Principles in DeliveryX
+### The 4 OOP Principles in QuickDeliver_BF
 
 | Principle | Where it appears in the code |
 |---|---|
@@ -165,7 +165,7 @@ Represents a complete delivery — links a Client, a Courier and a Parcel togeth
 - Official Python documentation : [https://docs.python.org/3/](https://docs.python.org/3/)
 - [How To Write a USEFUL README On Github](https://youtu.be/E6NO0rgFub4?si=nxLjKfAzaXOC-Hwa)
 - [ POO Python de Zéro en 2026 : Formation complète 1h (encapsulation, héritage, polymorphisme, ...)](https://youtu.be/QIraKuaHPQ8?si=RapxDTw8-zAZPKS6)
-
+- [📱Comment Créer une Application Mobile avec 🐍Python](https://youtu.be/W1x4EmfeXGg?si=G6CRyZho1Vo1v7xx)
 ---
 
 *Burkina Institute of Technology — CS28 — GROUP 05*
