@@ -146,7 +146,29 @@ Represents a complete delivery — links a Client, a Courier and a Parcel togeth
 | **Abstraction** | `create_delivery()` hides all internal complexity behind a single clean function call |
 
 ---
+## 👥 Group Members
 
+| Name | Role | Files | GitHub Profile |
+|---|---|---|---|
+| KABORÉ Gueswendé Hassane | Tech Lead — Menu, Main, GitHub, README | `main.py` · `menu.py` | [@hassane-labs](https://github.com/hassane-labs) |
+| DA Gloire Jeanine | File Handling — Save, Load, Report | `file_handler.py` | [@dajeanine79-hash](https://github.com/dajeanine79-hash) |
+| HOYNOUMA Nimatou | Person Class · Utilities · Report Stats | `models.py` · `utils.py` · `menu.py` | [@nimatouhoynouma00-commits](https://github.com/nimatouhoynouma00-commits) |
+| KABORÉ Ezekiel | Courier Class · Courier Input & Display | `models.py` · `menu.py` | [@Wendso-226](https://github.com/Wendso-226 ) |
+| KIENDREBEOGO Nina | Parcel Class · Delivery Class · Search Utils · Parcel Input | `models.py` · `utils.py` · `menu.py` | [@ninakiendrebeogo171-bot](https://github.com/ninakiendrebeogo171-bot) |
+| Cheick | Client Class · Client Input & Display | `models.py` · `menu.py` | [@KEUCH226](https://github.com/KEUCH226) |
+
+---
+
+## 🙏 Acknowledgements
+
+- **Ms. Kweyakie Afi Blebo** — for teaching and guidance throughout the module
+- Official Python documentation : [https://docs.python.org/3/](https://docs.python.org/3/)
+- [How To Write a USEFUL README On Github](https://youtu.be/E6NO0rgFub4?si=nxLjKfAzaXOC-Hwa)
+- [ POO Python de Zéro en 2026 : Formation complète 1h (encapsulation, héritage, polymorphisme, ...)](https://youtu.be/QIraKuaHPQ8?si=RapxDTw8-zAZPKS6)
+
+---
+
+*Burkina Institute of Technology — CS28 — GROUP 05*
 
 
 
