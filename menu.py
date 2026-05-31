@@ -1,7 +1,7 @@
 # =============================================================================
 # QuickDeliver_BF — DELIVERY MANAGEMENT SYSTEM
 # menu.py — User interaction functions (input handling and display)
-# Members Cheick, Ezekiel, Hassane
+# Members Cheick, Ezekiel, Hassane, Nina
 # Burkina Institute of Technology 
 # =============================================================================
 
@@ -20,7 +20,7 @@ from utils import (validate_phone, validate_email, validate_weight,
 def display_main_menu():
     """Displays the QuickDeliver_BF main menu with all available options."""
     print("\n" + "=" * 60)
-    print("   QuickDeliver_BF — MAIN MENU")
+    print("QuickDeliver_BF — MAIN MENU")
     print("=" * 60)
     print("  1. Add a new client")
     print("  2. Add a new courier")
@@ -113,8 +113,6 @@ def display_all_clients(clients: list):
  
 # COURIER FUNCTIONS — coded by Ezekiel 
 
-
-
 def input_courier(courier: list) -> Courier:
     """
     prompts the user to enter information for a new courier 
@@ -191,4 +189,67 @@ args:
         status_label = " available" if courier.is_available() else " Unavailable"
         print(f" Status     : {status_label}")
         display_separator()
+
+
+
+# PARCEL FUNCTIONS Code by Nina 
+
+
+def input_parcel() -> Parcel:
+    """
+    Prompts the user to enter information for a new parcel
+    and returns the created Parcel object.
+
+    Returns:
+        Parcel: The newly created Parcel object.
+    """
+    display_title("Parcel Information")
+
+    # Collect description — cannot be empty
+    description: str = input("  Description  : ").strip()
+    while not description:
+        print("   Description cannot be empty.")
+        description = input("  Description  : ").strip()
+
+    # Collect and validate weight
+    weight_str: str = input("  Weight (kg)  : ").strip()
+    while not validate_weight(weight_str):
+        print("  Weight must be a positive number (e.g. 2.5).")
+        weight_str = input("  Weight (kg)  : ").strip()
+    weight: float = float(weight_str)
+
+    # Collect dimensions — each must be a positive number
+    print("  Dimensions (in cm):")
+
+    length_str: str = input("Length : ").strip()
+    while not validate_weight(length_str):     # reuse positive float check
+        print("Length must be a positive number.")
+        length_str = input("Length : ").strip()
+
+    width_str: str = input("Width  : ").strip()
+    while not validate_weight(width_str):
+        print("Width must be a positive number.")
+        width_str = input("Width  : ").strip()
+
+    height_str: str = input("Height : ").strip()
+    while not validate_weight(height_str):
+        print("Height must be a positive number.")
+        height_str = input("Height : ").strip()
+
+    # Store dimensions as a tuple (demonstrates tuple usage)
+    dimensions: tuple = (float(length_str), float(width_str), float(height_str))
+
+    # Ask if the parcel is fragile
+    fragile_input: str = input("Fragile? (yes / no) : ").strip().lower()
+    fragile: bool = fragile_input in ("yes", "y", "oui", "o")
+
+    # Create the Parcel object and mark as fragile if needed
+    new_parcel = Parcel(description, weight, dimensions)
+    if fragile:
+        new_parcel.mark_as_fragile()
+
+    return new_parcel
+
+
+
 
