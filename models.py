@@ -1,6 +1,6 @@
 # QUICKDELIVER_BF — DELIVERY MANAGEMENT SYSTEM
 # models.py — All classes : Person, Client, Courier, Parcel, Delivery
-# Burkina Institute of Technology 
+# Burkina Institute of Technology
 
 import datetime
 import uuid
