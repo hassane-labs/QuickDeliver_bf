@@ -1,6 +1,8 @@
+# =============================================================================
 # QUICKDELIVER_BF — DELIVERY MANAGEMENT SYSTEM
 # models.py — All classes : Person, Client, Courier, Parcel, Delivery
 # Burkina Institute of Technology
+# =============================================================================
 
 import datetime
 import uuid
@@ -11,21 +13,9 @@ MINIMUM_FEE: float = 1000.0         # Minimum shipping fee in FCFA
 FRAGILE_SURCHARGE: float = 0.20     # 20% surcharge for fragile parcels
 
 
-# =============================================================================
+
 # PARENT CLASS — Person
 # Coded by : Nimatou
-# =============================================================================
-
-class Person:
-    """
-    Parent class representing a person in the QuickDeliver_BF system.
-    Serves as the base class for Client and Courier.
-    Demonstrates : Encapsulation (private attributes) and Abstraction.
-    """
-
-    def _init_(self, last_name: str, first_name: str, phone: str, email: str):
-        """
-        Initialises a person with their basic personal information.
 
 
 class Person:
@@ -35,6 +25,9 @@ class Person:
     Demonstrates : Encapsulation (private attributes) and Abstraction.
     """
 
+    # CORRECTION : le nom de la méthode était "_init_" (un seul underscore)
+    # au lieu de "__init__" (double underscore). Python ne reconnaissait pas
+    # le constructeur, ce qui provoquait une SyntaxError au démarrage.
     def __init__(self, last_name: str, first_name: str, phone: str, email: str):
         """
         Initialises a person with their basic personal information.
@@ -44,14 +37,14 @@ class Person:
             first_name (str): The person's first name.
             phone (str): The person's phone number.
             email (str): The person's email address.
-        
+        """
         # Private attributes — encapsulation
         self._last_name: str = last_name
         self._first_name: str = first_name
         self._phone: str = phone
         self._email: str = email
 
-    # --- Getters ---
+    # Getters
 
     def get_last_name(self) -> str:
         """Returns the last name of the person."""
@@ -69,7 +62,7 @@ class Person:
         """Returns the email address of the person."""
         return self._email
 
-    # --- Setters ---
+    # Setters 
 
     def set_phone(self, phone: str):
         """
@@ -106,11 +99,10 @@ class Person:
 
 
 
-        
-
 # CHILD CLASS : Client
 # Coded by : Cheick
 # Inherits from : Person
+
 
 class Client(Person):
     """
@@ -138,7 +130,7 @@ class Client(Person):
         self._client_id: str = str(uuid.uuid4())[:8].upper()   # auto-generated unique ID
         self._order_history: list = []                          # list of delivery IDs
 
-    # Getters 
+    # Getters
 
     def get_client_id(self) -> str:
         """Returns the unique identifier of the client."""
@@ -152,7 +144,7 @@ class Client(Person):
         """Returns the list of delivery IDs from past orders."""
         return self._order_history
 
-    # Methods 
+    # Methods
 
     def add_order(self, delivery_id: str):
         """
@@ -192,9 +184,6 @@ class Client(Person):
 
 
 
-
-
-
 # CHILD CLASS : Courier
 # Coded by : Ezekiel
 # Inherits from : Person
@@ -228,7 +217,7 @@ class Courier(Person):
         self._completed_deliveries: list = []                   # list of delivery IDs
         self._available: bool = True                            # available by default
 
-    # --- Getters ---
+    # Getters
 
     def get_courier_id(self) -> str:
         """Returns the unique identifier of the courier."""
@@ -246,7 +235,7 @@ class Courier(Person):
         """Returns True if the courier is available, False otherwise."""
         return self._available
 
-    # --- Setters ---
+    # Setters 
 
     def set_availability(self, available: bool):
         """
@@ -257,7 +246,7 @@ class Courier(Person):
         """
         self._available = available
 
-    # --- Methods ---
+    #  Methods 
 
     def add_delivery(self, delivery_id: str):
         """
@@ -273,7 +262,6 @@ class Courier(Person):
         Displays the full information of the courier.
         Overrides Person.display_info() — demonstrates Polymorphism.
         """
-        # Availability shown as readable text
         status = "Available" if self._available else "Busy"
 
         print(f"  Courier ID  : {self._courier_id}")
@@ -291,7 +279,6 @@ class Courier(Person):
             print("  No deliveries completed yet.")
         else:
             print(f"  Deliveries by {self._first_name} {self._last_name}:")
-            # for loop to list each delivery
             for index, delivery_id in enumerate(self._completed_deliveries, start=1):
                 print(f"    {index}. Delivery ID : {delivery_id}")
 
@@ -302,10 +289,10 @@ class Courier(Person):
 
 
 
-
+        
 
 # PARCEL CLASS
-# Coded by Nina
+# Coded by : Nina
 class Parcel:
     """
     Represents a parcel to be delivered with its physical characteristics.
@@ -329,7 +316,7 @@ class Parcel:
         self._fragile: bool = False                             # not fragile by default
         self._creation_date: datetime.date = datetime.date.today()
 
-    # Getters 
+    #  Getters 
 
     def get_parcel_id(self) -> str:
         """Returns the unique identifier of the parcel."""
@@ -351,7 +338,7 @@ class Parcel:
         """Returns True if the parcel is marked as fragile, False otherwise."""
         return self._fragile
 
-    #  Methods 
+    # Methods 
 
     def mark_as_fragile(self):
         """Marks the parcel as fragile — a 20% surcharge will be applied."""
@@ -364,7 +351,6 @@ class Parcel:
         Returns:
             float: Volume in cm³ (length x width x height).
         """
-        # Unpack the dimensions tuple into three variables
         length, width, height = self._dimensions
         return length * width * height
 
@@ -376,7 +362,6 @@ class Parcel:
         Returns:
             float: Base fee in FCFA.
         """
-        # max() ensures the minimum fee is always respected
         return max(MINIMUM_FEE, self._weight * BASE_RATE_PER_KG)
 
     def display_info(self):
@@ -396,10 +381,9 @@ class Parcel:
 
 
 
+
 # DELIVERY CLASS
-# Coded by Nina
-
-
+# Coded by : Nina
 
 class Delivery:
     """
@@ -442,7 +426,7 @@ class Delivery:
         # Fee calculated later
         self._total_fee: float = 0.0
 
-    #  Getters
+    #  Getters 
 
     def get_delivery_id(self) -> str:
         """Returns the unique identifier of the delivery."""
@@ -468,7 +452,7 @@ class Delivery:
         """Returns the parcel associated with this delivery."""
         return self._parcel
 
-    # --- Methods ---
+    #  Methods
 
     def update_status(self, new_status: str):
         """
@@ -477,17 +461,19 @@ class Delivery:
         Args:
             new_status (str): Must be one of VALID_STATUSES.
         """
-        # Check the new status is in the VALID_STATUSES tuple
         if new_status in VALID_STATUSES:
             self._status = new_status
+        
+            if new_status == "delivered":
+                self._delivery_date = datetime.datetime.now()
             print(f"  Status updated to : {new_status}")
         else:
-            print(f"  ❌ Invalid status. Choose from : {VALID_STATUSES}")
+            print(f"  Invalid status. Choose from : {VALID_STATUSES}")
 
     def mark_as_delivered(self):
         """Marks the delivery as delivered and records the exact delivery date and time."""
         self._status = "delivered"
-        self._delivery_date = datetime.datetime.now()   # record exact time of delivery
+        self._delivery_date = datetime.datetime.now()
         print(f"  Delivery {self._delivery_id} marked as delivered.")
 
     def calculate_total_fee(self) -> float:
@@ -516,7 +502,6 @@ class Delivery:
         print(f"  Status       : {self._status.upper()}")
         print(f"  Created      : {self._creation_date.strftime('%d/%m/%Y %H:%M')}")
 
-        # Show delivery date only if already delivered
         if self._delivery_date:
             print(f"  Delivered    : {self._delivery_date.strftime('%d/%m/%Y %H:%M')}")
 
@@ -544,7 +529,6 @@ class Delivery:
         Returns:
             str: A single line representing this delivery.
         """
-        # Format : ID | date | client | courier | status | fee
         return (f"{self._delivery_id}|"
                 f"{self._creation_date.strftime('%d/%m/%Y %H:%M')}|"
                 f"{self._client.get_first_name()} {self._client.get_last_name()}|"
@@ -556,6 +540,4 @@ class Delivery:
     def __str__(self) -> str:
         """Returns a short string representation of the delivery."""
         return (f"[DELIVERY] {self._delivery_id} — "
-                f"{self._client.get_first_name()} {self._client.get_last_name()} — "
-                f"{self._status.upper()}")
-
+             
