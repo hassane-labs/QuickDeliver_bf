@@ -25,9 +25,7 @@ class Person:
     Demonstrates : Encapsulation (private attributes) and Abstraction.
     """
 
-    # CORRECTION : le nom de la méthode était "_init_" (un seul underscore)
-    # au lieu de "__init__" (double underscore). Python ne reconnaissait pas
-    # le constructeur, ce qui provoquait une SyntaxError au démarrage.
+    
     def __init__(self, last_name: str, first_name: str, phone: str, email: str):
         """
         Initialises a person with their basic personal information.
