@@ -537,5 +537,5 @@ class Delivery:
 
     def __str__(self) -> str:
         """Returns a short string representation of the delivery."""
-        return (f"[DELIVERY] {self._delivery_id} — "
+        return (f"[DELIVERY] {self._delivery_id} — ")
              
