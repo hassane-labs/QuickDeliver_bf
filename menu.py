@@ -1,7 +1,7 @@
 # =============================================================================
 # QuickDeliver_BF — DELIVERY MANAGEMENT SYSTEM
 # menu.py — User interaction functions (input handling and display)
-# Members Cheick, Ezekiel, Hassane, Nina
+# Members Cheick, Ezekiel, Hassane, Nina , Nimatou
 # Burkina Institute of Technology 
 # =============================================================================
 
@@ -479,7 +479,7 @@ def generate_report(deliveries: list):
         if status in status_counts:
             status_counts[status] += 1
         total_revenue += delivery.get_total_fee()
-
+    #coded by Nimatou
     # Display the statistics in the terminal
     print(f"\n  Total deliveries   : {len(deliveries)}")
     display_separator()
