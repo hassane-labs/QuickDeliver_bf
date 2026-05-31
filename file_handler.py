@@ -6,13 +6,16 @@
 
 import datetime
     #import datetime — Import the modulus datetime that permit to manipulate the dates and hours from python standard library 
+
 from models import Delivery
     #from models import Delivery — import the class delevery from the file model.py
 
 
 #DELIVERIES_FILE and REPORT_FILE — contain constants 
+
 DELIVERIES_FILE = "deliveries.txt"
     #deliveries.txt: file that contains all the deliveries
+
 REPORT_FILE = "report.txt"
     #report.txt: file that contains the last static report generated
 
@@ -25,7 +28,6 @@ def save_delivery(delivery: Delivery):
     #def save_delivery(delivery: Delivery):a function that takes an object delivery in parameter and return nothing
      
     with open(DELIVERIES_FILE, "a", encoding="utf-8") as file:
-        
         #with: permits to close automatically the file
         #mode'a'(append): that means add, preserves existing data
         #encoding="utf-8": supports accented characters
@@ -37,7 +39,6 @@ def save_delivery(delivery: Delivery):
 
 
 def load_deliveries() -> list:
-    
     #charge all the deliveries in the file deliveries.txt  
     #Returns:
         #list: A list of non empty string lines from the file.
@@ -45,16 +46,20 @@ def load_deliveries() -> list:
     
     try:
         # Try to open and read the file with mode 'r'
+        
         with open(DELIVERIES_FILE, "r", encoding="utf-8") as file:
-            # Read all lines, stripping trailing newline characters
+            # try to open the DELIVERIES-FILE in UTF-8 read mode and access it via the file variable.The with statement ensure the file closes automatically at the end.
+            
             lines = [line.strip() for line in file.readlines()]
                 #readlines()- read all les lines
                 #strip()- to each lines delete spacings et lines breaks
+            
             return [line for line in lines if line]
                 # Filter out any empty lines that may exist and return only non empty lines
+    
     except FileNotFoundError:
-        # File does not exist yet — return an empty list
         return []
+         # File does not exist yet — return an empty list
 
 
 def save_report(deliveries: list):
@@ -70,6 +75,7 @@ def save_report(deliveries: list):
     Args:
         deliveries (list): The list of all Delivery objects.
     """
+    
     status_counts: dict = {
         "pending": 0,
         "in_transit": 0,
@@ -79,6 +85,7 @@ def save_report(deliveries: list):
       # Counting dictionary initialized to zero for each possible statut 
 
     total_revenue: float = 0.0
+    #variable of type float that accumulates total revenue initialized to 0  
 
     for delivery in deliveries:
         # for loop to go through every delivery and tally up counts and revenue
@@ -118,6 +125,7 @@ def save_report(deliveries: list):
         file.write("  --- REVENUE ---\n")
         file.write(f"  Total Revenue      : {total_revenue:,.0f} FCFA\n\n")
 
+        #footer
         file.write("=" * 60 + "\n")
         file.write("   End of report\n")
         file.write("=" * 60 + "\n")
